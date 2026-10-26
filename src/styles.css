@@ -1,0 +1,95 @@
+@import "tailwindcss";
+@source "./";
+
+@theme {
+  --font-sans: "Space Grotesk", Helvetica, Arial, sans-serif;
+  --font-mono: "Roboto Mono", ui-monospace, monospace;
+  --color-paper: #fcfcfc;
+  --color-ink: #202020;
+  --color-muted: #646464;
+  --color-faint: #838383;
+  --color-line: #d9d9d9;
+  --color-surface: #f0f0f0;
+  --color-blue: #0a66ff;
+  --color-blue-soft: #e7f0ff;
+  --color-critical: #e5484d;
+  --color-critical-soft: #ffefef;
+  --color-caution: #b45309;
+  --color-caution-soft: #fff4e5;
+  --color-deep: #111111;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 20px;
+    line-height: 31px;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  ::selection {
+    background: #cfe0ff;
+    color: var(--color-ink);
+  }
+}
+
+@utility display {
+  font-size: 2.5rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+@utility section-title {
+  font-size: 2rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+@media (min-width: 768px) {
+  .display {
+    font-size: 4rem;
+    line-height: 4rem;
+  }
+  .section-title {
+    font-size: 3.375rem;
+    line-height: 3.5rem;
+  }
+}
+
+.card-in {
+  animation: rise 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .card-in {
+    animation: none;
+  }
+}
