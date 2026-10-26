@@ -5,10 +5,12 @@ import {
   cats,
   checklist,
   levelLabel,
+  signGroups,
   signs,
   type Card,
-  type Cat,
+  type FilterId,
   type Level,
+  type SignItem,
 } from "@/data/guide";
 import { SignFace, Visual } from "@/app/visuals";
 
@@ -40,7 +42,7 @@ function loadSet(key: string): string[] {
 
 export function GuideApp() {
   const [query, setQuery] = useState("");
-  const [cat, setCat] = useState<Cat | "all" | "saved">("all");
+  const [cat, setCat] = useState<FilterId>("all");
   const [saved, setSaved] = useState<string[]>([]);
   const [checks, setChecks] = useState<string[]>([]);
   const [ready, setReady] = useState(false);
@@ -77,6 +79,7 @@ export function GuideApp() {
   const visible = useMemo(() => {
     return cards.filter((card) => {
       if (cat === "saved" && !saved.includes(card.id)) return false;
+      if (cat === "signs") return false;
       if (cat !== "all" && cat !== "saved" && card.cat !== cat) return false;
       if (!q) return true;
       const blob = [card.title, card.lede, ...(card.bullets ?? []), levelLabel[card.level]]
@@ -87,7 +90,7 @@ export function GuideApp() {
   }, [cat, q, saved]);
 
   const visibleSigns = useMemo(() => {
-    if (cat !== "all") return [];
+    if (cat !== "all" && cat !== "signs") return [];
     if (!q) return signs;
     return signs.filter((s) =>
       [s.name, s.kind, s.meaning, levelLabel[s.level]].join(" ").toLowerCase().includes(q),
@@ -133,8 +136,8 @@ export function GuideApp() {
           </p>
           <h1 className="display mt-4 max-w-3xl md:mx-auto">The road test, made skimmable.</h1>
           <p className="mt-5 max-w-xl text-muted md:mx-auto">
-            Rules, signs, and the moves an examiner watches — pulled from the August 2026
-            Driver’s Handbook, written for a Halifax Class 5 test.
+            Rules, speeds, signs, and the parking moves an examiner watches — pulled from the
+            August 2026 Driver’s Handbook, written for a Halifax Class 5 test.
           </p>
         </section>
 
@@ -208,7 +211,7 @@ export function GuideApp() {
               id="guide-search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search school zone, parallel, yield…"
+              placeholder="Search parking, school zone, 30…"
               className="h-11 w-full bg-transparent text-base outline-none placeholder:text-faint"
             />
             {query ? (
@@ -239,9 +242,10 @@ export function GuideApp() {
           </div>
         </div>
 
+        {cat !== "signs" ? (
         <section id="rules" className="scroll-mt-40 pt-8">
           {visible.length === 0 ? (
-            <p className="py-16 text-center text-muted">Nothing matches. Try “stop”, “bus”, or “5N”.</p>
+            <p className="py-16 text-center text-muted">Nothing matches. Try “stop”, “park”, or “30”.</p>
           ) : (
             <ul className="grid gap-4 md:grid-cols-2">
               {visible.map((card, i) => (
@@ -256,30 +260,30 @@ export function GuideApp() {
             </ul>
           )}
         </section>
+        ) : null}
 
         {visibleSigns.length > 0 ? (
-          <section id="signs" className="scroll-mt-24 pt-20">
-            <h2 className="section-title">Signs, by shape and colour.</h2>
+          <section id="signs" className={`scroll-mt-24 ${cat === "signs" ? "pt-8" : "pt-20"}`}>
+            <h2 className="section-title">Signs worth knowing cold.</h2>
             <p className="mt-3 max-w-xl text-muted">
-              Octagon is only stop. Inverted triangle is only yield. Yellow diamonds warn.
-              Fluorescent pentagon is a school zone. Orange means work. Green guides you.
+              Octagon is only stop. Inverted triangle is only yield. A yellow diamond warns.
+              Fluorescent pentagon is a school area. Orange means the usual lane and the usual
+              speed are paused.
             </p>
-            <ul className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {visibleSigns.map((sign) => (
-                <li key={sign.id} className="rounded-2xl border border-line bg-paper p-4">
-                  <SignFace item={sign} />
-                  <div className="mt-3 flex items-start justify-between gap-2">
-                    <h3 className="text-base leading-6 font-medium">{sign.name}</h3>
-                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs ${levelClass[sign.level]}`}>
-                      {levelLabel[sign.level]}
-                    </span>
-                  </div>
-                  <p className="mt-1 font-mono text-[11px] tracking-wide text-faint uppercase">{sign.kind}</p>
-                  <p className="mt-2 text-sm leading-5 text-muted">{sign.meaning}</p>
-                </li>
-              ))}
-            </ul>
+            {signGroups.map((group) => {
+              const items = visibleSigns.filter((s) => s.group === group.id);
+              if (items.length === 0) return null;
+              return (
+                <div key={group.id} className="mt-10">
+                  <h3 className="text-lg font-semibold tracking-tight">{group.title}</h3>
+                  <p className="mt-1 max-w-xl text-sm leading-5 text-muted">{group.lede}</p>
+                  <SignGrid items={items} />
+                </div>
+              );
+            })}
           </section>
+        ) : cat === "signs" ? (
+          <p className="py-16 text-center text-muted">No sign matches that.</p>
         ) : null}
 
         <footer className="mt-20 border-t border-line pt-8 text-sm leading-6 text-muted">
@@ -300,6 +304,26 @@ export function GuideApp() {
         </footer>
       </main>
     </div>
+  );
+}
+
+function SignGrid({ items }: { items: SignItem[] }) {
+  return (
+    <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+      {items.map((sign) => (
+        <li key={sign.id} className="rounded-2xl border border-line bg-paper p-4">
+          <SignFace item={sign} />
+          <div className="mt-3 flex items-start justify-between gap-2">
+            <h3 className="text-base leading-6 font-medium">{sign.name}</h3>
+            <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs ${levelClass[sign.level]}`}>
+              {levelLabel[sign.level]}
+            </span>
+          </div>
+          <p className="mt-1 font-mono text-[11px] tracking-wide text-faint uppercase">{sign.kind}</p>
+          <p className="mt-2 text-sm leading-5 text-muted">{sign.meaning}</p>
+        </li>
+      ))}
+    </ul>
   );
 }
 

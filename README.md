@@ -2,7 +2,7 @@
 
 A skimmable field guide for the **Nova Scotia Class 5 road test** in Halifax.
 
-Rules, signs, and the moves an examiner watches — drawn from the August 2026 Driver’s Handbook (Traffic Safety Act) and the Access Nova Scotia booking page. Not an official government site.
+Rules, parking, speed zones, signs, and the moves an examiner watches — drawn from the August 2026 Driver’s Handbook (Traffic Safety Act) and the Access Nova Scotia booking page. Not an official government site.
 
 **Live site:** https://emayan08.github.io/drive-test/
 

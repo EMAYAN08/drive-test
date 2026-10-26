@@ -4,6 +4,7 @@ export type Cat =
   | "day"
   | "watch"
   | "moves"
+  | "park"
   | "rules"
   | "signals"
   | "gdl"
@@ -12,6 +13,12 @@ export type Cat =
 export type Visual =
   | "hill"
   | "parallel"
+  | "angle"
+  | "stall"
+  | "parktypes"
+  | "parkban"
+  | "parkcmp"
+  | "speeds"
   | "roundabout"
   | "lines"
   | "lights"
@@ -32,13 +39,17 @@ export type Card = {
   source: "handbook" | "booking" | "local";
 };
 
-export const cats: { id: Cat | "all" | "saved"; label: string }[] = [
+export type FilterId = Cat | "all" | "saved" | "signs";
+
+export const cats: { id: FilterId; label: string }[] = [
   { id: "all", label: "All" },
   { id: "saved", label: "Saved" },
   { id: "day", label: "Test day" },
   { id: "watch", label: "Examiner" },
   { id: "moves", label: "Moves" },
+  { id: "park", label: "Parking" },
   { id: "rules", label: "Rules" },
+  { id: "signs", label: "Signs" },
   { id: "signals", label: "Signals" },
   { id: "gdl", label: "Licence" },
   { id: "halifax", label: "Halifax" },
@@ -206,10 +217,25 @@ export const cards: Card[] = [
     source: "handbook",
   },
   {
+    id: "park-types",
+    title: "Four parks the examiner can ask for",
+    level: "essential",
+    cat: "park",
+    lede: "Signal first. Finish straight, centred, and close enough that the car cannot roll into traffic. Then the parking brake, then Park.",
+    bullets: [
+      "Parallel — the classic street park. Curbside wheels end within 30 cm of the curb.",
+      "Angle — wide streets and some lots. Turn in when your front lines up with the space.",
+      "Stall — 90 degrees, the kind behind shops. Centre it. Backing in is fine if the examiner didn’t say “pull in.”",
+      "Hill — point the wheels so a roll goes into the curb or off the road, never into a lane.",
+    ],
+    visual: "parktypes",
+    source: "handbook",
+  },
+  {
     id: "parallel",
     title: "Parallel park, the handbook way",
     level: "essential",
-    cat: "moves",
+    cat: "park",
     lede: "Signal, slow, and if you must, stop early so the cars behind give you room. Curbside wheels end within 30 centimetres of the curb.",
     bullets: [
       "Pull up about one metre out, rear bumpers even with the car ahead of the space.",
@@ -218,15 +244,50 @@ export const cards: Card[] = [
       "Wheel sharp the other way. Ease in beside the curb.",
       "Straighten, centre the car in the space.",
       "Park brake on, gear in Park, engine off. Check traffic before you open the door.",
+      "Too far from the curb, on the line, or with a wheel on the curb: fix it. One calm correction beats leaving it.",
     ],
     visual: "parallel",
+    source: "handbook",
+  },
+  {
+    id: "angle",
+    title: "Angle parking",
+    level: "essential",
+    cat: "park",
+    lede: "Used in lots and on wide streets. The stall is already diagonal. You should not need a three-point turn to get in.",
+    bullets: [
+      "Signal and slow first.",
+      "Stay parallel, at least 1.5 metres out from the parked cars.",
+      "When your front is even with the rear of the space, turn in slowly.",
+      "Straighten and stop lined up with the other cars, or when the front wheels just touch the curb.",
+      "Leaving: safety scan, shoulder checks, back out straight until the front clears the cars beside you. Watch the front corner — it swings wide.",
+      "If you can’t see past the cars, creep. A horn tap is for a real conflict, not a habit.",
+    ],
+    visual: "angle",
+    source: "handbook",
+  },
+  {
+    id: "stall",
+    title: "90-degree stalls",
+    level: "essential",
+    cat: "park",
+    lede: "The mark is a centred car between the lines, wheels straight, stopped before the bumper crosses the back line. Drama is not required.",
+    bullets: [
+      "Pick the stall before you turn. Signal. Creep.",
+      "Nose-in: start the turn as the near line reaches your side mirror, then straighten so both lines stay in the mirrors.",
+      "Back-in: pull past the stall, stop, safety scan, then reverse while watching the lines. Stop before the rear crosses the back line.",
+      "Equal space on both sides. If you are sitting on a line, pull out and reset. Don’t leave it crooked.",
+      "If the examiner says “pull in,” go forward. Don’t switch to a reverse park halfway through the instruction.",
+      "Leaving a nose-in stall: look over your shoulder, creep, and check the lane both ways before the front bumper clears the cars beside you.",
+    ],
+    visual: "stall",
     source: "handbook",
   },
   {
     id: "hill",
     title: "Which way the wheels point",
     level: "essential",
-    cat: "moves",
+    cat: "park",
     lede: "Park so if the car rolls, it rolls into the curb or off the road — never into traffic. Then the parking brake, then Park.",
     bullets: [
       "Downhill, curb or no curb: wheels right.",
@@ -234,22 +295,43 @@ export const cards: Card[] = [
       "Uphill with no curb: wheels right, toward the edge.",
       "Manual: reverse if you face downhill, first gear if you face uphill.",
       "Still within 30 centimetres of the curb or edge.",
+      "Turn the wheels while you are still holding the brake. Then set the parking brake before you shift to Park.",
     ],
     visual: "hill",
     source: "handbook",
   },
   {
-    id: "angle",
-    title: "Angle parking",
-    level: "note",
-    cat: "moves",
-    lede: "Used in lots and on wide streets. Signal and slow first.",
+    id: "parkcmp",
+    title: "No parking is not no stopping",
+    level: "critical",
+    cat: "park",
+    lede: "The signs look alike. Stopping to let someone out can still be illegal. On the test, read the sign before you touch the brake.",
     bullets: [
-      "Stay parallel, at least 1.5 metres out from the parked cars.",
-      "When your front is even with the rear of the space, turn in slowly.",
-      "Straighten and stop lined up with the other cars, or when the front wheels just touch the curb.",
-      "Leaving: safety scan, shoulder checks, back out straight until the front clears the cars beside you. Watch the front corner.",
+      "No parking — a P with a slash. Don’t leave the vehicle. A brief stop to load or unload a passenger is the usual difference. Read the hours on the sign.",
+      "No stopping — don’t stop at all, except to avoid a crash or obey a sign, a light, or an officer. Not for a passenger. Not for a phone.",
+      "Accessible stall — the wheelchair symbol needs a permit on the dash. Using one without it is an offence.",
+      "A yellow curb, a bus stop, or a fire lane: treat it as no stopping unless a sign gives hours.",
+      "If you do leave the car: parking brake on, engine off, wheels within 30 cm of the curb.",
     ],
+    visual: "parkcmp",
+    source: "handbook",
+  },
+  {
+    id: "parkwhere",
+    title: "Where you must not stop",
+    level: "essential",
+    cat: "park",
+    lede: "Signs don’t list every ban. The handbook does. “Stopped” counts even if you are still in the car with the engine running.",
+    bullets: [
+      "On the crest of a hill or in a curve if you block someone’s view.",
+      "Blocking a driveway, sidewalk, crosswalk, or another parked car.",
+      "Within 5 metres of a crosswalk, fire hydrant, or fire-station driveway.",
+      "Within 7.5 metres of an intersection.",
+      "Within 10 metres of a flashing light, stop sign, yield sign, or traffic signal.",
+      "Within 15 metres of the nearest rail at a railway crossing.",
+      "Double-parked, beside road work if you’d block traffic, or in an accessible space without a permit.",
+    ],
+    visual: "parkban",
     source: "handbook",
   },
   {
@@ -323,6 +405,23 @@ export const cards: Card[] = [
     source: "handbook",
   },
   {
+    id: "speeds",
+    title: "Speed, by the place you are in",
+    level: "critical",
+    cat: "rules",
+    lede: "The sign is a ceiling. If there is no sign, Nova Scotia still has a number. A school area changes it again the moment children are outside.",
+    bullets: [
+      "Never faster than the posted sign. Crawling well under the limit on a clear, dry road is also marked.",
+      "School area, children present, and the road you entered from was 50: drive 30. Any hour, any day, including a weekend if kids are out.",
+      "If the limit before the school area was already above 50, the school-area limit is 50, not 30.",
+      "A child on the road, the sidewalk, or within 30 metres counts as present.",
+      "Roundabouts are built for about 30–50. There is no special statutory limit — you slow because the circle is tight.",
+      "Rain, fog, or a short sightline: under the limit is the right speed. Match the road, not the number you memorised.",
+    ],
+    visual: "speeds",
+    source: "handbook",
+  },
+  {
     id: "twosec",
     title: "The 2-second rule",
     level: "essential",
@@ -362,24 +461,6 @@ export const cards: Card[] = [
       "A vehicle already in the intersection goes before one that has not entered.",
       "Two facing cars can both go straight, or both turn right. If one is turning left across the other, the left turn waits.",
       "Dark traffic lights: treat the intersection as an all-way stop.",
-    ],
-    source: "handbook",
-  },
-  {
-    id: "parkwhere",
-    title: "Where you must not stop",
-    level: "essential",
-    cat: "rules",
-    lede: "Signs don’t list every ban. The handbook does. “Stopped” counts even if you are still in the car.",
-    bullets: [
-      "On the crest of a hill or in a curve if you block someone’s view.",
-      "Blocking a driveway, sidewalk, crosswalk or another parked car.",
-      "Within 5 metres of a crosswalk, fire hydrant, or fire-station driveway.",
-      "Within 7.5 metres of an intersection.",
-      "Within 10 metres of a flashing light, stop sign, yield sign, or traffic signal.",
-      "Within 15 metres of the nearest rail at a railway crossing.",
-      "Double-parked, beside road work if you’d block traffic, or in an accessible space without a permit.",
-      "If you leave the car: parking brake on, engine off, wheels within 30 cm of the curb.",
     ],
     source: "handbook",
   },
@@ -598,33 +679,84 @@ export const cards: Card[] = [
   },
 ];
 
+export type SignGroup = "must" | "parking" | "warning" | "work" | "guide";
+
 export type SignItem = {
   id: string;
   name: string;
   kind: string;
   meaning: string;
   level: Level;
+  group: SignGroup;
 };
 
+export const signGroups: { id: SignGroup; title: string; lede: string }[] = [
+  {
+    id: "must",
+    title: "Orders",
+    lede: "Regulatory signs. The shape and the colour are part of the message, even before you read the words.",
+  },
+  {
+    id: "parking",
+    title: "Curb and stall",
+    lede: "A slashed P is not the same rule as no stopping. Read it before you brake.",
+  },
+  {
+    id: "warning",
+    title: "The road is changing",
+    lede: "Yellow diamonds warn. They don’t give the order — the sign after them does.",
+  },
+  {
+    id: "work",
+    title: "Orange means work",
+    lede: "Cones, a flagger, and a temporary speed replace the usual lane and the usual limit.",
+  },
+  {
+    id: "guide",
+    title: "Information only",
+    lede: "Green directs you. Blue marks a service. Neither one changes the speed by itself.",
+  },
+];
+
 export const signs: SignItem[] = [
-  { id: "stop", name: "Stop", kind: "Regulatory · octagon", meaning: "Full stop at the line or crosswalk. No paint: stop within 1.5 m so people can cross.", level: "critical" },
-  { id: "yield", name: "Yield", kind: "Regulatory · triangle", meaning: "Slow as you arrive and give way to traffic in or near the intersection.", level: "critical" },
-  { id: "school", name: "School zone", kind: "Regulatory · pentagon", meaning: "Fluorescent yellow-green. Kids present and the normal limit is 50: you drive 30, any day, any hour.", level: "critical" },
-  { id: "speed", name: "Speed limit", kind: "Regulatory · rectangle", meaning: "A maximum, not a suggestion. Unposted: 50 urban, 80 highway.", level: "essential" },
-  { id: "donotenter", name: "Do not enter", kind: "Regulatory · square", meaning: "Wrong way. The road ahead is for traffic coming toward you.", level: "critical" },
-  { id: "noleft", name: "No left turn", kind: "Regulatory · square", meaning: "Red ring and slash. The turn is prohibited.", level: "essential" },
-  { id: "nopass", name: "No passing", kind: "Regulatory · square", meaning: "Two cars in a red circle with a slash. Do not pass.", level: "essential" },
-  { id: "nopark", name: "No parking", kind: "Regulatory · square", meaning: "P with a slash. Don’t leave the vehicle here. Stopping rules may still differ — read the sign.", level: "caution" },
-  { id: "oneway", name: "One way", kind: "Regulatory · rectangle", meaning: "All traffic on this road travels the way the arrow points.", level: "essential" },
-  { id: "crossbuck", name: "Railway crossbuck", kind: "Regulatory · X", meaning: "You are at the tracks. Stop if lights flash or a stop sign is posted. Look both ways.", level: "critical" },
-  { id: "warnrail", name: "Railway ahead", kind: "Warning · diamond", meaning: "Tracks are coming. The symbol shows the angle. Slow, look, listen.", level: "essential" },
-  { id: "curve", name: "Curve ahead", kind: "Warning · diamond", meaning: "Reduce speed before the bend. Momentum pushes you outward.", level: "caution" },
-  { id: "merge", name: "Merge", kind: "Warning · diamond", meaning: "Two lanes become one. Both sides are responsible for a smooth join. Be ready to yield.", level: "essential" },
-  { id: "slip", name: "Slippery when wet", kind: "Warning · diamond", meaning: "The surface loses grip in rain. Ease off and lengthen the gap.", level: "caution" },
-  { id: "ped", name: "Pedestrian crossing", kind: "Warning · diamond", meaning: "People cross here. Be ready to stop. Marked or not, an intersection crosswalk is real.", level: "critical" },
-  { id: "signal", name: "Signals ahead", kind: "Warning · diamond", meaning: "Lights are coming. Start covering the brake if the light is stale.", level: "note" },
-  { id: "worker", name: "Road work", kind: "Temporary · orange", meaning: "Workers may be present. Slow down. Follow the flag person and the cones, not your usual lane.", level: "critical" },
-  { id: "guide", name: "Guide sign", kind: "Guidance · green", meaning: "Directions, route numbers, distances. Blue is often services. They inform — they don’t give orders.", level: "note" },
+  { id: "stop", group: "must", name: "Stop", kind: "Regulatory · octagon", meaning: "Full stop at the line or crosswalk. No paint: stop within 1.5 m so people can cross. Wheels still, then look.", level: "critical" },
+  { id: "allway", group: "must", name: "All-way plaque", kind: "Regulatory · plaque", meaning: "Sits under the stop. Every approach stops. First stopped is first to go. Same time: the driver on the left yields to the right.", level: "essential" },
+  { id: "yield", group: "must", name: "Yield", kind: "Regulatory · triangle", meaning: "Slow as you arrive and give way. Stop if you have to. Traffic in or near the intersection goes first.", level: "critical" },
+  { id: "school", group: "must", name: "School area", kind: "Regulatory · pentagon", meaning: "Fluorescent yellow-green, two children. Kids present and the road before this was 50: you drive 30, any day, any hour.", level: "critical" },
+  { id: "speed30", group: "must", name: "Maximum 30", kind: "Regulatory · rectangle", meaning: "The number under a school area when you entered from a 50 zone. It is a ceiling, and only while the school-area rule applies.", level: "critical" },
+  { id: "speed", group: "must", name: "Speed limit", kind: "Regulatory · rectangle", meaning: "A maximum, not a target. No sign: 50 in town, 80 outside town. A new sign replaces the one before it.", level: "essential" },
+  { id: "donotenter", group: "must", name: "Do not enter", kind: "Regulatory · square", meaning: "Wrong way. The road ahead is for traffic coming toward you. Don’t nose in to “just turn around.”", level: "critical" },
+  { id: "wrongway", group: "must", name: "Wrong way", kind: "Regulatory · rectangle", meaning: "You are facing traffic. Pull over when it is safe and turn around. Don’t keep going.", level: "critical" },
+  { id: "oneway", group: "must", name: "One way", kind: "Regulatory · rectangle", meaning: "Every lane on this road travels the way the arrow points. Left on red is legal only from one one-way onto another.", level: "essential" },
+  { id: "noleft", group: "must", name: "No left turn", kind: "Regulatory · square", meaning: "Red ring and slash over a left arrow. The turn is prohibited. Go past and find another way.", level: "essential" },
+  { id: "noright", group: "must", name: "No right turn", kind: "Regulatory · square", meaning: "Right is prohibited here, including the usual right-on-red. Stop and wait for a different green, or another route.", level: "essential" },
+  { id: "nouturn", group: "must", name: "No U-turn", kind: "Regulatory · square", meaning: "The U-turn arrow is slashed. Don’t swing across the centre. Go around the block.", level: "essential" },
+  { id: "nopass", group: "must", name: "No passing", kind: "Regulatory · square", meaning: "Do not pass. The sign covers the stretch even when the centre line looks tempting.", level: "essential" },
+  { id: "keepright", group: "must", name: "Keep right", kind: "Regulatory · square", meaning: "Stay to the right of the island, median, or obstruction. Don’t cut left of it.", level: "essential" },
+  { id: "laneends", group: "warning", name: "Lane ends", kind: "Warning · diamond", meaning: "Your lane is about to disappear. Signal, shoulder-check, and merge when the gap is yours. Don’t wait until the line runs out.", level: "essential" },
+  { id: "twoway", group: "warning", name: "Two-way traffic", kind: "Warning · diamond", meaning: "Oncoming traffic is ahead. You had been on a one-way or a divided road. Move right and stay in your half.", level: "essential" },
+  { id: "divided", group: "warning", name: "Divided highway", kind: "Warning · diamond", meaning: "A median begins. Stay on the right-hand roadway. You cannot turn left across it.", level: "caution" },
+  { id: "crossbuck", group: "must", name: "Railway crossbuck", kind: "Regulatory · X", meaning: "You are at the tracks. Stop if lights flash or a stop sign is posted. Look both ways. A second train can hide behind the first.", level: "critical" },
+  { id: "nopark", group: "parking", name: "No parking", kind: "Regulatory · square", meaning: "P with a slash. Don’t leave the vehicle. A brief stop to load or unload a passenger is the usual difference — read the hours.", level: "caution" },
+  { id: "nostop", group: "parking", name: "No stopping", kind: "Regulatory · square", meaning: "Don’t stop at all, except to avoid a crash or obey a sign, a light, or an officer. Not for a passenger. Not for a phone.", level: "critical" },
+  { id: "accessible", group: "parking", name: "Accessible stall", kind: "Regulatory · square", meaning: "Wheelchair symbol, usually on blue. A permit has to be displayed. Using the stall without one is an offence.", level: "critical" },
+  { id: "warnrail", group: "warning", name: "Railway ahead", kind: "Warning · diamond", meaning: "Tracks are coming. Slow, look, listen. The crossbuck is the crossing itself.", level: "essential" },
+  { id: "stopahead", group: "warning", name: "Stop ahead", kind: "Warning · diamond", meaning: "A stop sign is coming. Start slowing now so the stop is smooth, not a stab at the line.", level: "essential" },
+  { id: "curve", group: "warning", name: "Curve ahead", kind: "Warning · diamond", meaning: "Ease off before the bend. Braking in the curve pushes you outward.", level: "caution" },
+  { id: "merge", group: "warning", name: "Merge", kind: "Warning · diamond", meaning: "Two lanes become one. Be ready to yield. Both sides are responsible for a smooth join.", level: "essential" },
+  { id: "added", group: "warning", name: "Added lane", kind: "Warning · diamond", meaning: "A new lane appears beside you. Stay in yours. This is not a merge — entering traffic should use the new lane.", level: "essential" },
+  { id: "slip", group: "warning", name: "Slippery when wet", kind: "Warning · diamond", meaning: "The surface loses grip in rain. Ease off and lengthen the following gap.", level: "caution" },
+  { id: "ped", group: "warning", name: "Pedestrian ahead", kind: "Warning · diamond", meaning: "People cross or walk near the road. Cover the brake. An intersection crosswalk is real even with no paint.", level: "critical" },
+  { id: "crosswalk", group: "warning", name: "Crosswalk", kind: "Regulatory · square", meaning: "A marked place to cross. Stop for anyone in it or about to step in. Don’t pass a car that has stopped for them.", level: "critical" },
+  { id: "signal", group: "warning", name: "Signals ahead", kind: "Warning · diamond", meaning: "Lights are coming. If the light has been green a long time, cover the brake.", level: "note" },
+  { id: "roundwarn", group: "warning", name: "Roundabout ahead", kind: "Warning · diamond", meaning: "Slow early, pick the lane the arrows show, and yield to traffic already going around.", level: "essential" },
+  { id: "deer", group: "warning", name: "Deer crossing", kind: "Warning · diamond", meaning: "Animals cross, especially at dusk. Scan the shoulders. Don’t swerve into oncoming traffic.", level: "caution" },
+  { id: "bump", group: "warning", name: "Bump or dip", kind: "Warning · diamond", meaning: "Ease off before it, not on it. A hard brake on the bump unloads the tires.", level: "note" },
+  { id: "worker", group: "work", name: "Road work", kind: "Temporary · orange", meaning: "Workers or a changed road ahead. Slow down. The cones are the lane, not the paint underneath.", level: "critical" },
+  { id: "flagger", group: "work", name: "Flagger", kind: "Temporary · orange", meaning: "A person with a paddle or flag. Their stop or slow is the law in that zone. Make eye contact.", level: "critical" },
+  { id: "workspeed", group: "work", name: "Construction speed", kind: "Temporary · orange", meaning: "An orange MAXIMUM replaces the normal limit, including when nobody is standing in the lane.", level: "critical" },
+  { id: "guide", group: "guide", name: "Guide sign", kind: "Guidance · green", meaning: "Directions, route numbers, distances. Read them early so you are in the lane before the exit, not during it.", level: "note" },
+  { id: "hospital", group: "guide", name: "Hospital", kind: "Services · blue", meaning: "A hospital entrance is near. Watch for people and ambulances. The sign itself does not change the speed.", level: "note" },
 ];
 
 export const checklist = [
